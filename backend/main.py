@@ -103,6 +103,7 @@ async def summarize(article: NewsArticle):
         raise HTTPException(status_code=500, detail="API_KEY manquante sur le serveur.")
     
     try:
+        # En Python, 'gemini-1.5-flash' est stable
         model = genai.GenerativeModel('gemini-1.5-flash')
         
         system_prompt = (

@@ -4,26 +4,27 @@ import { SYSTEM_INSTRUCTION } from "../constants";
 
 export const summarizeArticle = async (content: string): Promise<string> => {
   try {
-    // Utilisation de process.env.API_KEY comme requis par les instructions
+    // Vérification sécurisée de l'existence de process et de la clé
     // @ts-ignore
-    const key = process.env.API_KEY;
-    if (!key) throw new Error("API_KEY non configurée.");
+    const key = typeof process !== 'undefined' ? process.env.API_KEY : undefined;
+    
+    if (!key) {
+      console.warn("Clé API manquante dans le frontend. Le résumé direct est désactivé.");
+      throw new Error("API_KEY non configurée dans l'environnement.");
+    }
 
-    // Initialisation correcte selon la règle : new GoogleGenAI({ apiKey: ... })
     const ai = new GoogleGenAI({ apiKey: key });
     
-    // Utilisation directe de ai.models.generateContent avec le modèle gemini-3-flash-preview
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: `En tant que journaliste professionnel, résume cet article de presse en respectant scrupuleusement ta charte éditoriale. Va droit à l'essentiel : \n\n ${content}`,
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,
-        temperature: 0.1, // Plus bas pour plus de neutralité
+        temperature: 0.1,
         topP: 0.95,
       },
     });
 
-    // Extraction sécurisée via la propriété .text (pas de méthode .text())
     const text = response.text;
     if (!text) throw new Error("Le modèle a retourné une réponse vide.");
 
