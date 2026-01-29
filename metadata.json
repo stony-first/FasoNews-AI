@@ -1,0 +1,5 @@
+{
+  "name": "FasoNews AI - Le Journaliste Intelligent",
+  "description": "Une plateforme d'actualités africaines utilisant l'IA Gemini pour fournir des résumés factuels, neutres et concis, adaptés au contexte ouest-africain.",
+  "requestFramePermissions": []
+}
